@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var tapped = false
+    @State private var tapped = true
     @State private var entry = ""
+    @State private var righty = false
+    @State private var lefty = false
+    @State private var sentAlert = false
+    @State private var sentText = ""
     var body: some View {
-        if !tapped {
             VStack {
                 if !tapped {
                     Button("Connect to Bluetooth!") {
@@ -28,15 +31,47 @@ struct ContentView: View {
                 }
                 
                 if tapped {
-                    Text("Button tapped!").font(.largeTitle)
+                    Text("Are you:")
+                        .font(.callout)
+    
+                    HStack {
+                        Button("Left handed?") {
+                            lefty.toggle()
+                        }.padding(.trailing, 50)
+                        Button("Right handed?") {
+                            righty.toggle()
+                        }
+                    }.padding()
+                    
+                    Button("Send text") {
+                        sentText = entry
+                        entry = ""
+                        sentAlert = true
+                    }.padding()
+                    
                     Button("Disconnect") {
                         tapped.toggle()
-                    }
+                    }.buttonStyle(.bordered)
+                    .padding(.bottom, 100)
+                    
+                    
                     TextField("Enter text here", text: $entry, axis: .vertical)
+                        .onSubmit {
+                            sentText = entry
+                            entry = ""
+                            sentAlert.toggle()
+                        }
+                    
+                        .alert("Text sent: \(sentText)", isPresented: $sentAlert) {
+                            Button("OK", role: .cancel) {
+                                sentAlert = false
+                                
+                            }
+                        }
                 }
             }
             .padding()
-        }
+        
     }
 }
 

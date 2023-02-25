@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var lefty = false
     @State private var sentAlert = false
     @State private var sentText = ""
+    @State private var offset = 0
+    
     var body: some View {
             VStack {
                 if !tapped {
@@ -37,9 +39,11 @@ struct ContentView: View {
                     HStack {
                         Button("Left handed?") {
                             lefty.toggle()
+                            offset = -20
                         }.padding(.trailing, 50)
                         Button("Right handed?") {
                             righty.toggle()
+                            offset = 20
                         }
                     }.padding()
                     
@@ -61,6 +65,7 @@ struct ContentView: View {
                             entry = ""
                             sentAlert.toggle()
                         }
+                        .padding(30)
                     
                         .alert("Text sent: \(sentText)", isPresented: $sentAlert) {
                             Button("OK", role: .cancel) {
@@ -70,7 +75,9 @@ struct ContentView: View {
                         }
                 }
             }
+            .offset(x: CGFloat(offset))
             .padding()
+            .textFieldStyle(.roundedBorder)
         
     }
 }
